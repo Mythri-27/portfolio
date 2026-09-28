@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mythri Badugu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0C0F;
+      --surface: #141519;
+      --text: #EDEEF0;
+      --muted: #8B8D96;
+      --line: #24262C;
+      --amber: #E3A64D;
+      --violet: #8C7CF0;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html {
+      scroll-padding-top: 70px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Sora", system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .mono {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    nav {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 20;
+      background: rgba(11, 12, 15, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .brand span {
+      color: var(--amber);
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 1.6rem;
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .navlinks a {
+      text-decoration: none;
+      position: relative;
+      padding: 0.3rem 0;
+      transition: color .15s;
+    }
+
+    .navlinks a:hover {
+      color: var(--text);
+    }
+
+    .navlinks a.active {
+      color: var(--amber);
+    }
+
+    .navlinks a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 2px;
+    }
+
+    #navtoggle {
+      display: none;
+    }
+
+    .burger {
+      display: none;
+      font-size: 1.4rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    @media (max-width:680px) {
+      .navlinks {
+        position: absolute;
+        top: 58px;
+        left: 0;
+        right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        gap: 0;
+        padding: 0 1.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .2s ease;
+      }
+
+      .navlinks a {
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .navlinks a.active::after {
+        display: none;
+      }
+
+      #navtoggle:checked~.navlinks {
+        max-height: 400px;
+      }
+
+      .burger {
+        display: block;
+      }
+    }
+
+    section {
+      scroll-margin-top: 58px;
+      padding: 4.5rem 0;
+      border-top: 1px solid var(--line);
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    section#home {
+      border-top: none;
+      min-height: 90vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      top: -140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 640px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(227, 166, 77, 0.16), rgba(140, 124, 240, 0.08), transparent 72%);
+      pointer-events: none;
+    }
+
+    .sectitle {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.6rem;
+      text-align: center;
+      background: linear-gradient(90deg, #14B8A6 0%, #38BDF8 50%, #a15cf6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sectitle::after {
+      content: "";
+      display: block;
+      width: 48px;
+      height: 3px;
+      border-radius: 3px;
+      margin: 0.8rem auto 0;
+      background: linear-gradient(90deg, #14B8A6, #38BDF8, #8B5CF6);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    @media (max-width:680px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .avatar {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 2px solid var(--amber);
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar img,
+    .avatar svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar .placeholder {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    @media (max-width:680px) {
+      .avatar {
+        margin: 0 auto;
+      }
+    }
+
+    .greet {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.95rem;
+      color: var(--violet);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+
+    .grad {
+      background: linear-gradient(100deg, var(--amber), var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lede {
+      margin-top: 1.2rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 52ch;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width:680px) {
+      .cta-row {
+        justify-content: center;
+      }
+    }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.84rem;
+      padding: 0.7rem 1.3rem;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      transition: border-color .15s;
+    }
+
+    .btn.primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      font-weight: 500;
+    }
+
+    .btn.ghost:hover {
+      border-color: var(--muted);
+    }
+
+    .about-text {
+      max-width: 64ch;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .about-text p+p {
+      margin-top: 1.1rem;
+    }
+
+    .about-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    @media (max-width:680px) {
+      .edu-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ecard {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+
+    .ecard:hover {
+      border-color: var(--amber);
+      transform: translateY(-4px);
+      box-shadow: 0 0 24px rgba(227, 166, 77, 0.14);
+    }
+
+    .edate {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.76rem;
+      color: var(--violet);
+    }
+
+    .etitle {
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.35;
+    }
+
+    .eschool {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .escore {
+      margin-top: 0.4rem;
+      align-self: flex-start;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--amber);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.3rem 0.8rem;
+    }
+
+
+    @media (max-width:600px) {
+      .stackgroups {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width:820px) {
+      .stack-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width:480px) {
+      .stack-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .tcard {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.4rem 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+
+    .tcard img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .tcard img.invert {
+      filter: invert(1);
+    }
+
+    .tcard span {
+      font-size: 0.86rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .tcard:hover {
+      border-color: var(--amber);
+      transform: translateY(-4px);
+      box-shadow: 0 0 24px rgba(227, 166, 77, 0.14);
+    }
+
+    .concepts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 2rem;
+    }
+
+    .concepts span {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    @media (max-width:680px) {
+      .projects {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pcard {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: border-color .15s, transform .15s;
+    }
+
+    .pcard:hover {
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+
+    .pcard.feature {
+      grid-column: 1 / -1;
+      background: var(--surface);
+    }
+
+    .ptitle {
+      font-weight: 700;
+      font-size: 1.12rem;
+    }
+
+    .ptag {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--violet);
+    }
+
+    .pdesc {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .plinks {
+      display: flex;
+      gap: 1rem;
+      margin-top: auto;
+    }
+
+    .plinks a {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plinks a:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      max-width: 600px;
+    }
+
+    @media (max-width:520px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contact-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+
+    .contact-item a {
+      text-decoration: none;
+    }
+
+    .clabel {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .cval {
+      font-size: 0.95rem;
+    }
+
+    .contact-item:hover {
+      border-color: var(--amber);
+    }
+
+    .contact-item a:hover {
+      color: var(--amber);
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      text-align: center;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    a:focus-visible,
+    .pcard:focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="wrap">
+      <a class="brand" href="#home">mythri<span>.</span>dev</a>
+      <input type="checkbox" id="navtoggle">
+      <label class="burger" for="navtoggle">&#9776;</label>
+      <div class="navlinks">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#stack">Tech stack</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="home">
+    <div class="glow"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="greet">console.log("hello world")</div>
+        <h1>I'm Badugu Mythri —<br></h1>
+        <h2>building <span class="grad">smart &amp; secure solutions </span>for real-world problems.</h2>
+        <p class="lede"></p>
+        <div class="cta-row">
+          <a class="btn primary" href="#projects">View projects</a>
+          <a class="btn ghost"
+            href="https://drive.google.com/file/d/1PXKPo0KyEcUHfHKQiNLWVRi6D0b8Wjli/view?usp=drive_link" target="_blank"
+            rel="noopener">Resume</a>
+          <a class="btn ghost" href="#contact">Contact </a>
+        </div>
+      </div>
+      <div class="avatar">
+        <img src="avatar.jpg" alt="Mythri Badugu">
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="sectitle">About me</div>
+      <div class="about-text">
+        <!-- <p>I'm a Computer Science undergrad at <strong>JNTUH College of Engineering, Hyderabad</strong>, specializing in
+          cybersecurity, with a CGPA of 8.938/10.</p> -->
+        <p>I love building <strong>full-stack applications </strong> and exploring how AI can make them smarter. I'm
+          growing my skills in <strong>machine learning</strong> and <strong>AI tools</strong>, and I like using them to
+          solve real-world problems, not just build demos.</p>
+        <p>My aim is to build intelligent applications that are also secure by design, not just clever. I learn best by
+          building, shipping, and iterating, whether I'm working alone or with a team.</p>
+        <p>Most recently I spent five months as an <strong>Application Security Intern at Centella Scientific</strong>.
+          Outside of security work, I build full-stack and AI projects — from <strong>RAG pipelines</strong> to hardened
+          <strong>API gateways</strong> —
+          and I've solved 200+ problems on LeetCode along the way.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap">
+      <div class="sectitle">Education</div>
+      <div class="edu-grid">
+
+        <div class="ecard">
+          <div class="edate">2023 – 2027</div>
+          <div class="etitle">B.Tech, Computer Science &amp; Engineering (Cybersecurity)</div>
+          <div class="eschool">JNTUH College of Engineering, Hyderabad</div>
+          <div class="escore">CGPA 8.938 / 10</div>
+        </div>
+
+        <div class="ecard">
+          <div class="edate">2021 – 2023</div>
+          <div class="etitle">Intermediate (MPC)</div>
+          <div class="eschool">Narayana Junior College</div>
+          <div class="escore">986 / 1000</div>
+        </div>
+
+        <div class="ecard">
+          <div class="edate">Certifications</div>
+          <div class="etitle">Oracle Agentic AI Foundations Associate</div>
+          <div class="eschool">In progress</div>
+        </div>
+
+        <div class="ecard">
+          <div class="edate">Achievements</div>
+          <div class="etitle">2nd place, Coding Shuffle Contest</div>
+          <div class="eschool">JNTUH · March 2025</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="wrap">
+      <div class="sectitle">Tech stack</div>
+      <div class="stack-grid">
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/html5/html5-original.svg"
+            alt=""><span>HTML</span></div>
+        <div class="tcard"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/css3/css3-original.svg"
+            alt=""><span>CSS</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/javascript/javascript-original.svg"
+            alt=""><span>JavaScript</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/react/react-original.svg"
+            alt=""><span>React</span></div>
+        <div class="tcard"><img class="invert"
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/nextjs/nextjs-original.svg"
+            alt=""><span>Next.js</span></div>
+
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/nodejs/nodejs-original.svg"
+            alt=""><span>Node.js</span></div>
+        <div class="tcard"><img class="invert"
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/express/express-original.svg"
+            alt=""><span>Express</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mongodb/mongodb-original.svg"
+            alt=""><span>MongoDB</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/tailwindcss/tailwindcss-original.svg"
+            alt=""><span>Tailwind CSS</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mysql/mysql-original.svg"
+            alt=""><span>MySQL</span></div>
+
+        <div class="tcard"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/java/java-original.svg"
+            alt=""><span>Java</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/python/python-original.svg"
+            alt=""><span>Python</span></div>
+        <div class="tcard"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/c/c-original.svg"
+            alt=""><span>C</span></div>
+        <div class="tcard"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/git/git-original.svg"
+            alt=""><span>Git</span></div>
+        <div class="tcard"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/postman/postman-original.svg"
+            alt=""><span>Postman</span></div>
+      </div>
+
+      <!-- <div class="concepts">
+        <span>DSA</span><span>OOP</span><span>DBMS</span><span>Operating Systems</span><span>Computer Networks</span>
+      </div> -->
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="sectitle">Projects</div>
+      <div class="projects">
+        <div class="pcard feature">
+          <div class="ptag">RAG · NEXT.JS · GEMINI AI · CONVEX</div>
+          <div class="ptitle">ComplianceCopilot</div>
+          <div class="pdesc">AI-assisted mapping of security findings to compliance controls. Vector retrieval plus
+            Gemini reranking across multiple frameworks, cutting LLM context 71% while holding 93.5% context recall. A
+            hallucination-mitigation layer verifies every cited control against the source corpus — 100% citation
+            validity, 100% retrieval hit rate.</div>
+          <div class="plinks">
+            <a href="https://github.com/Mythri-27/Compliance-Assistant.git" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://compliance-assistant-sigma.vercel.app" target="_blank" rel="noopener">Live demo</a>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="ptag">NODE.JS · JWT · REDIS</div>
+          <div class="ptitle">Secure API Gateway</div>
+          <div class="pdesc">Gateway with JWT auth, RBAC, rate limiting, CSRF protection and audit logging. Token
+            rotation with reuse detection, 20+ tests covering auth and CSRF.</div>
+          <div class="plinks"><a href="https://github.com/Mythri-27/secure-api-gateway.git" target="_blank"
+              rel="noopener">GitHub</a></div>
+        </div>
+        <div class="pcard">
+          <div class="ptag">JAVA</div>
+          <div class="ptitle">Employee Management System</div>
+          <div class="pdesc">File-based CRUD system for employee records, built on Java I/O streams with no database.
+          </div>
+          <div class="plinks"><a href="https://github.com/Mythri-27/employee-management-system.git" target="_blank"
+              rel="noopener">GitHub</a></div>
+        </div>
+        <div class="pcard">
+          <div class="ptag">MONGODB · EXPRESS · REACT · NODE.JS</div>
+          <div class="ptitle">Thinkboard</div>
+          <div class="pdesc">Full-stack note-taking app built on the MERN stack with a RESTful API for CRUD operations.
+            Upstash Redis rate-limiting middleware protects the endpoints from abuse, and the responsive UI uses React
+            Router with Tailwind CSS and DaisyUI.</div>
+          <div class="plinks">
+            <a href="https://github.com/Mythri-27/Mern-Thinkboard" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://mern-thinkboard-rho.vercel.app/" target="_blank" rel="noopener">Live demo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="sectitle">Contact</div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="clabel">email</div><a class="cval"
+            href="mailto:mythri.badugu@gmail.com">mythri.badugu@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="clabel">phone</div><a class="cval" href="tel:+919392493765">+91 93924 93765</a>
+        </div>
+        <div class="contact-item">
+          <div class="clabel">github</div><a class="cval" href="https://github.com/Mythri-27" target="_blank"
+            rel="noopener">github.com/Mythri-27</a>
+        </div>
+        <div class="contact-item">
+          <div class="clabel">linkedin</div><a class="cval" href="https://linkedin.com/in/mythri-badugu-76aa55325"
+            target="_blank" rel="noopener">mythri-badugu</a>
+        </div>
+        <div class="contact-item">
+          <div class="clabel">location</div><span class="cval">Hyderabad, India</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>&copy; 2026 Mythri Badugu</footer>
+  <script>
+    const links = document.querySelectorAll('.navlinks a');
+    const sections = document.querySelectorAll('section[id]');
+    const toggle = document.getElementById('navtoggle');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(link =>
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id)
+          );
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    // close the mobile menu after tapping a link
+    links.forEach(link => link.addEventListener('click', () => (toggle.checked = false)));
+  </script>
+
+</body>
+
+</html>
